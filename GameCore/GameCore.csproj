@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3AA0C26D-50C7-43AF-B15E-CA48DCDAD7C5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GameCore</RootNamespace>
+    <AssemblyName>GameCore</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ServerModel\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Enums\OwnerType.cs" />
+    <Compile Include="Enums\SignUpResultCode.cs" />
+    <Compile Include="Enums\MessageCode.cs" />
+    <Compile Include="BitConverters.cs" />
+    <Compile Include="Model\BacteriumBase.cs" />
+    <Compile Include="Model\BacteriumData.cs" />
+    <Compile Include="Model\GameSettings.cs" />
+    <Compile Include="Model\OwnClanBase.cs" />
+    <Compile Include="Model\OwnAccountBase.cs" />
+    <Compile Include="Model\AccountBase.cs" />
+    <Compile Include="AccountSetting.cs" />
+    <Compile Include="Model\AccountStatus.cs" />
+    <Compile Include="Model\Characteristics.cs" />
+    <Compile Include="Model\ClanBase.cs" />
+    <Compile Include="Model\ConsumerProductType.cs" />
+    <Compile Include="Model\Inventory.cs" />
+    <Compile Include="Model\ProductPlace.cs" />
+    <Compile Include="Model\Transform.cs" />
+    <Compile Include="Model\VirusBase.cs" />
+    <Compile Include="Model\VirusGroup.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\Road.cs" />
+    <Compile Include="Tools\RoadManager.cs" />
+    <Compile Include="Tools\WayPosition.cs" />
+    <Compile Include="Validation.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Libraries\ILibrary\ILibrary\ILibrary.csproj">
+      <Project>{f3ae47d4-3da5-4390-983a-4004c35b1b03}</Project>
+      <Name>ILibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Libraries\Noname\Noname\Noname.csproj">
+      <Project>{95a5d098-a1b4-4951-9afe-eb2bc4ab230a}</Project>
+      <Name>Noname</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
