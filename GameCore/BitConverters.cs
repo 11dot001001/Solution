@@ -1,4 +1,5 @@
-﻿using ILibrary.Maths.Geometry2D;
+﻿using GameCore.Tools;
+using ILibrary.Maths.Geometry2D;
 using Noname.BitConversion;
 using Noname.BitConversion.System;
 using UnityEngine;
@@ -33,5 +34,16 @@ namespace GameCore
             SingleBitConverter.Instance.GetBytes(value.Radius, bytes, ref offset);
         }
         public override Circle GetInstance(byte[] bytes, int startIndex) => new Circle(Vector2BitConverter.Instance.GetInstance(bytes, ref startIndex), SingleBitConverter.Instance.GetInstance(bytes, ref startIndex));
+    }
+
+    public sealed class WayPositionBitConverter : ConstantLengthBitConverter<WayPosition>
+    {
+        static public readonly WayPositionBitConverter Instance;
+
+        static WayPositionBitConverter() => Instance = new WayPositionBitConverter();
+        public WayPositionBitConverter() : base(Vector2BitConverter.Instance.ByteCount) { }
+
+        public override void GetBytes(WayPosition value, byte[] bytes, int offset) => Vector2BitConverter.Instance.GetBytes(value.Position, bytes, ref offset);
+        public override WayPosition GetInstance(byte[] bytes, int startIndex) => new WayPosition(Vector2BitConverter.Instance.GetInstance(bytes, ref startIndex));
     }
 }

@@ -28,15 +28,12 @@ namespace ServerModel.GameMechanics
 
             int offset = 0;
             for (int i = 0; i < bacteriumCount; i++)
-            {
-                Bacterium bacterium = new Bacterium(bacteriumCount, new Vector2(bacteriumsData[offset++], bacteriumsData[offset++]), bacteriumsData[offset++], bacteriumsData[offset++]);
-                _bacteriums[i] = bacterium;
-            }
+                _bacteriums[i] = new Bacterium(bacteriumCount, new Vector2(bacteriumsData[offset++], bacteriumsData[offset++]), bacteriumsData[offset++], bacteriumsData[offset++]);
 
             for (int i = 0; i < _bacteriums.Length; i++)
                 for (int j = 0; j < _bacteriums.Length; j++)
                     if (j != i)
-                        _bacteriums[i].Roads[j] = new RoadManager(_bacteriums[i], _bacteriums[j], _bacteriums);
+                        _bacteriums[i].Roads = new RoadManager(_bacteriums[i], _bacteriums[j], _bacteriums).Roads;
         }
     }
 }

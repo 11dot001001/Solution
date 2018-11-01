@@ -1,16 +1,17 @@
 ﻿using ILibrary.Maths.Geometry2D;
+using Noname.BitConversion;
 using UnityEngine;
 
 namespace GameCore.Tools
 {
-    public class WayPosition
+    public struct WayPosition
     {
-        public Vector2 position;
+        public Vector2 Position;
 
-        public WayPosition(Vector2 position) => this.position = position;
+        public WayPosition(Vector2 position) => Position = position;
 
-        public WayPosition(Circle cirle, Vector2 tangencyDirection) => position = cirle.Position + tangencyDirection;
+        public WayPosition(Circle cirle, Vector2 tangencyDirection) => Position = cirle.Position + tangencyDirection;
 
-        public override string ToString() => position.ToString();
+        public override string ToString() => Position.ToString();
     }
 }

@@ -5,7 +5,6 @@ namespace GameCore.Model
 {
     public class Inventory
     {
-
         static public readonly InheritableVariableLengthBitConverter<Inventory> BitConverter;
 
         static Inventory()
@@ -20,11 +19,10 @@ namespace GameCore.Model
         private int _freezeBottle;
         private int _runBottle;
 
+        public Inventory() { }
+
         public int FreezeBottle { get => _freezeBottle; set => _freezeBottle = value; }
         public int RunBottle { get => _runBottle; set => _runBottle = value; }
-
-        public Inventory()
-        { }
 
         public void AddProduct(ConsumerProductType productType, int count)
         {

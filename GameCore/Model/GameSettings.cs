@@ -17,7 +17,7 @@ namespace GameCore.Model
             BitConverter = builder.Finalize();
         }
 
-        internal BacteriumData[] _bacteriums;
+        public BacteriumData[] _bacteriums;
 
         public GameSettings() { }
         public GameSettings(BacteriumData[] bacteriums) => _bacteriums = bacteriums ?? throw new ArgumentNullException(nameof(bacteriums));

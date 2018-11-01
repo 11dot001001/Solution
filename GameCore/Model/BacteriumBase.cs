@@ -1,17 +1,30 @@
 ﻿using System;
 using GameCore.Tools;
+using Noname.BitConversion;
+using Noname.BitConversion.System.Collections.Generic;
 using UnityEngine;
 
 namespace GameCore.Model
 {
     public abstract class BacteriumBase
     {
-        private readonly RoadManager[] _roads;
+        static protected readonly InheritableVariableLengthBitConverter<BacteriumBase> BaseBitConverter;
+
+        static BacteriumBase()
+        {
+            AbstractVariableLengthBitConverterBuilder<BacteriumBase> builder = new AbstractVariableLengthBitConverterBuilder<BacteriumBase>();
+            builder.AddField(a => a._roads, (a, roads) => a._roads = roads, ArrayReliableBitConverter.GetInstance(ReliableBitConverter.GetInstance(Road.BitConverter)));
+            builder.AddField(a => a._bacteriumData, (a, bacteriumData) => a._bacteriumData = bacteriumData, BacteriumData.BitConverter.Instance);
+            BaseBitConverter = builder.Finalize();
+        }
+
+        private Road[] _roads;
         private BacteriumData _bacteriumData;
 
+        protected BacteriumBase() { }
         protected BacteriumBase(int roadsCount, BacteriumData bacteriumData)
         {
-            _roads = new RoadManager[roadsCount];
+            _roads = new Road[roadsCount];
             _bacteriumData = bacteriumData;
         }
 
@@ -20,7 +33,7 @@ namespace GameCore.Model
         public float TransportRadius => _bacteriumData._transform.TransportRadius;
         public float BacteriumRadius => _bacteriumData._transform.BacteriumRadius;
         public Transform Transform => _bacteriumData._transform;
-        public RoadManager[] Roads => _roads;
+        public Road[] Roads { get => _roads; set => _roads = value; }
         public BacteriumData BacteriumData => _bacteriumData;
 
         public event EventHandler PositionChanged;

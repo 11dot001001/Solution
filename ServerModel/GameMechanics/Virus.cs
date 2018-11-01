@@ -33,11 +33,11 @@ namespace ServerModel.GameMechanics
             _moveTimer = new Timer(speed);
             _moveTimer.Elapsed += Move;
             _moveTimer.Start();
-            _position = _way[0].position;
+            _position = _way[0].Position;
         }
         private void Move(object sender, ElapsedEventArgs e)
         {
-            Vector2 localTarget = _way.First().position;
+            Vector2 localTarget = _way.First().Position;
             Position = Vector2.MoveTowards(_position, localTarget, 0.3f);
 
             if(_position == localTarget)

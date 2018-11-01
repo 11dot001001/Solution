@@ -15,8 +15,7 @@ namespace GameCore.Tools
         private BacteriumBase _globalStart;
         private BacteriumBase _globalTarget;
 
-        public int Count => _roads.Count;
-        public List<Road> Roads => _roads;
+        public Road[] Roads => _roads.ToArray();
 
         public RoadManager(BacteriumBase start, BacteriumBase end, IEnumerable<BacteriumBase> bacteriums)
         {

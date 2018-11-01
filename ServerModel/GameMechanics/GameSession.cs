@@ -27,8 +27,7 @@ namespace ServerModel.GameMechanics
             foreach (Client client in clients)
             {
                 client.CurrentGame = this;
-                Player player = new Player(client);
-                _players.Add(client, player);
+                _players.Add(client, new Player(client));
             }
             _map = MapManager.GetMap(this, gameMode, clients.Count());
             SendSettings();
