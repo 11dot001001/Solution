@@ -32,14 +32,7 @@ namespace ServerModel
         }
         public static void StartGame(IEnumerable<Client> clients) => _server.TCPCall(_server.StartGame, clients);
         public static void SendVirus(IEnumerable<Client> clients, IEnumerable<int> bacteriums, int target, int count) => _server.TCPCall(_server.SendViruses, bacteriums, target, count, clients);
-        public static void SendVirusPosition(Virus virus, IEnumerable<Client> clients)
-        {
-            //    foreach (Client client in clients)
-            //    {
-            //        OwnerType owner = virus.Owner == null ? OwnerType.None : virus.Owner.Equals(client) ? OwnerType.My : OwnerType.Enemy;
-            //        _server.TCPCall(_server.SendVirusPosition, virus, (byte)owner, client);
-            //    }
-        }
+        public static void SendVirusGroup(IEnumerable<Client> clients, VirusGroup virusGroup) => _server.TCPCall(_server.SendVirusGroup, virusGroup, clients);
         public static void Initialize(int port, string nameOrConnectionString) => _server = new Server(port, nameOrConnectionString, "");
         public static void Start() => _server.Start();
         public static void Stop() => _server.Stop();

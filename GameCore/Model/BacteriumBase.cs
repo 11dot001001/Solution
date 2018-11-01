@@ -1,7 +1,8 @@
-﻿using System;
-using GameCore.Tools;
+﻿using GameCore.Tools;
 using Noname.BitConversion;
 using Noname.BitConversion.System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameCore.Model
@@ -13,18 +14,18 @@ namespace GameCore.Model
         static BacteriumBase()
         {
             AbstractVariableLengthBitConverterBuilder<BacteriumBase> builder = new AbstractVariableLengthBitConverterBuilder<BacteriumBase>();
-            builder.AddField(a => a._roads, (a, roads) => a._roads = roads, ArrayReliableBitConverter.GetInstance(ReliableBitConverter.GetInstance(Road.BitConverter)));
+            builder.AddField(a => a._roads, (a, roads) => a._roads = roads, ArrayReliableBitConverter.GetInstance(ListReliableBitConverter.GetInstance(ReliableBitConverter.GetInstance(Road.BitConverter))));
             builder.AddField(a => a._bacteriumData, (a, bacteriumData) => a._bacteriumData = bacteriumData, BacteriumData.BitConverter.Instance);
             BaseBitConverter = builder.Finalize();
         }
 
-        private Road[] _roads;
+        private List<Road>[] _roads;
         private BacteriumData _bacteriumData;
 
         protected BacteriumBase() { }
-        protected BacteriumBase(int roadsCount, BacteriumData bacteriumData)
+        protected BacteriumBase(int bacteriumsCount, BacteriumData bacteriumData)
         {
-            _roads = new Road[roadsCount];
+            _roads = new List<Road>[bacteriumsCount];
             _bacteriumData = bacteriumData;
         }
 
@@ -33,7 +34,7 @@ namespace GameCore.Model
         public float TransportRadius => _bacteriumData._transform.TransportRadius;
         public float BacteriumRadius => _bacteriumData._transform.BacteriumRadius;
         public Transform Transform => _bacteriumData._transform;
-        public Road[] Roads { get => _roads; set => _roads = value; }
+        public List<Road>[] Roads => _roads;
         public BacteriumData BacteriumData => _bacteriumData;
 
         public event EventHandler PositionChanged;

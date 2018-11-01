@@ -25,6 +25,7 @@ namespace ServerModel
         public RemoteProcedure<GameSettings> SendGameSettings { get; set; }
         public RemoteProcedure StartGame { get; set; }
         public RemoteProcedure<IEnumerable<int>, int, int> SendViruses { get; private set; }
+        public RemoteProcedure<VirusGroup> SendVirusGroup { get; private set; }
 
         public List<Client> AuthorizedClients { get; set; } = new List<Client>();
         public Dictionary<int, Client> FindGameClients { get; set; } = new Dictionary<int, Client>();
@@ -75,6 +76,7 @@ namespace ServerModel
             SendGameSettings = DefineRemoteProcedure(ReliableBitConverter.GetInstance(GameSettings.BitConverter));
             StartGame = DefineRemoteProcedure();
             SendViruses = DefineRemoteProcedure(iEnumerableBacteriumId, Int32BitConverter.Instance, Int32BitConverter.Instance);
+            SendVirusGroup = DefineRemoteProcedure(ReliableBitConverter.GetInstance(VirusGroup.BitConverter));
         }
 
         #region Network

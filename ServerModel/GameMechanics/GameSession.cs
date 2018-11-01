@@ -60,10 +60,13 @@ namespace ServerModel.GameMechanics
         {
             List<int> bacteriumFrom = bacteriumsFrom.ToList();
             bacteriumFrom.Remove(bacteriumTo);
-            Network.SendVirus(_players.Keys, bacteriumFrom, bacteriumTo, 100);
-            //foreach (int bacteriumId in bacteriumFrom)
-            //    foreach (Road road in bacteriums[bacteriumId].roads[bacteriumTo])
-            //        new Virus(bacteriums[bacteriumId].Owner, road.Points, 10, 100f).PositionChanged += VirusPositionChanged;
+            //Network.SendVirus(_players.Keys, bacteriumFrom, bacteriumTo, 100);
+
+            foreach (int bacteriumId in bacteriumFrom)
+            {
+                Road road = _map.Bacteriums[bacteriumId].Roads[bacteriumTo].First();
+                Network.SendVirusGroup(_players.Keys, new VirusGroup(_map.Bacteriums[bacteriumId], _map.Bacteriums[bacteriumTo], 100, road, 2f));
+            }
         }
     }
 }

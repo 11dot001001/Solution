@@ -1,5 +1,6 @@
 ﻿using GameCore.Tools;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ServerModel.GameMechanics
@@ -33,7 +34,7 @@ namespace ServerModel.GameMechanics
             for (int i = 0; i < _bacteriums.Length; i++)
                 for (int j = 0; j < _bacteriums.Length; j++)
                     if (j != i)
-                        _bacteriums[i].Roads = new RoadManager(_bacteriums[i], _bacteriums[j], _bacteriums).Roads;
+                        _bacteriums[i].Roads[j] = new List<Road>(new RoadManager(_bacteriums[i], _bacteriums[j], _bacteriums).Roads);
         }
     }
 }
