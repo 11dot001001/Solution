@@ -26,7 +26,7 @@ namespace ServerModel
                 BacteriumData[] buffer = new BacteriumData[map.Bacteriums.Length];
                 int offset = 0;
                 foreach (Bacterium item in map.Bacteriums)
-                    buffer[offset++] = player.Bacteriums.Contains(item) ? new BacteriumData(OwnerType.My, item.Transform, item.VirusCount) : new BacteriumData(OwnerType.None, item.Transform, item.VirusCount);
+                    buffer[offset++] = player.Bacteriums.Contains(item) ? new BacteriumData(item.Id, OwnerType.My, item.Transform, item.VirusCount) : new BacteriumData(item.Id, OwnerType.None, item.Transform, item.VirusCount);
                 _server.TCPCall(_server.SendGameSettings, new GameSettings(buffer), player.Client);
             }
         }

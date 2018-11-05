@@ -1,6 +1,8 @@
-﻿using GameCore.Tools;
+﻿using GameCore.Model;
+using GameCore.Tools;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ServerModel.GameMechanics
@@ -29,12 +31,12 @@ namespace ServerModel.GameMechanics
 
             int offset = 0;
             for (int i = 0; i < bacteriumCount; i++)
-                _bacteriums[i] = new Bacterium(bacteriumCount, new Vector2(bacteriumsData[offset++], bacteriumsData[offset++]), bacteriumsData[offset++], bacteriumsData[offset++]);
+                _bacteriums[i] = new Bacterium(i, bacteriumCount, new Vector2(bacteriumsData[offset++], bacteriumsData[offset++]), bacteriumsData[offset++], bacteriumsData[offset++]);
 
             for (int i = 0; i < _bacteriums.Length; i++)
                 for (int j = 0; j < _bacteriums.Length; j++)
                     if (j != i)
-                        _bacteriums[i].Roads[j] = new List<Road>(new RoadManager(_bacteriums[i], _bacteriums[j], _bacteriums).Roads);
+                        _bacteriums[i].Roads.Add(_bacteriums[j].Id, new Path(_bacteriums[j], new List<Road>(new RoadManager(_bacteriums[i], _bacteriums[j], _bacteriums).Roads)));
         }
     }
 }

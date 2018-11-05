@@ -76,7 +76,7 @@ namespace ServerModel
             SendGameSettings = DefineRemoteProcedure(ReliableBitConverter.GetInstance(GameSettings.BitConverter));
             StartGame = DefineRemoteProcedure();
             SendViruses = DefineRemoteProcedure(iEnumerableBacteriumId, Int32BitConverter.Instance, Int32BitConverter.Instance);
-            SendVirusGroup = DefineRemoteProcedure(ReliableBitConverter.GetInstance(VirusGroup.BitConverter));
+            SendVirusGroup = DefineRemoteProcedure(ReliableBitConverter.GetInstance(VirusGroup.NetworkBitConverter));
         }
 
         #region Network

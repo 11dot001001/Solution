@@ -50,6 +50,7 @@
     <Compile Include="Model\OtherAccount.cs" />
     <Compile Include="Model\OwnClan.cs" />
     <Compile Include="Model\OtherClan.cs" />
+    <Compile Include="Model\VirusGroupNet.cs" />
     <Compile Include="Model\VirusNet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

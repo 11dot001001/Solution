@@ -41,7 +41,8 @@ namespace GameCore.Tools
 
             Vector2 startDirection = _globalTarget.Position - _globalStart.Position;
             List<BacteriumBase> tempTargets = _bacteriums.Where(x => (x.Position - _globalStart.Position).magnitude < startDirection.magnitude).ToList();
-            tempTargets.RemoveAll(x => Vector2.Angle(_globalStart.Position - x.Position, _globalTarget.Position - x.Position) < 135);
+            //tempTargets.RemoveAll(x => Vector2.Angle(_globalStart.Position - x.Position, _globalTarget.Position - x.Position) < 135);
+            tempTargets.RemoveAll(x => Vector2.Angle(_globalStart.Position - x.Position, _globalStart.Position - _globalTarget.Position) > 75);
 
             if (!IsIntersect(_globalStart.Position, _globalTarget.Position, _bacteriums, out BacteriumBase none))
                 _roads.Add(road);

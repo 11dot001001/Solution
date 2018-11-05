@@ -1,30 +1,37 @@
 ﻿using System;
+using System.Linq;
 using GameCore.Tools;
 using Noname.BitConversion;
 using Noname.BitConversion.System;
 
 namespace GameCore.Model
 {
-    public abstract class VirusGroupBase
+    public class VirusGroup
     {
-        static protected readonly InheritableVariableLengthBitConverter<VirusGroupBase> BaseBitConverter;
+        static public readonly InheritableVariableLengthBitConverter<VirusGroup> NetworkBitConverter;
 
-        static VirusGroupBase()
+        static VirusGroup()
         {
-            AbstractVariableLengthBitConverterBuilder<VirusGroupBase> builder = new AbstractVariableLengthBitConverterBuilder<VirusGroupBase>();
-            builder.AddField(a => a._virusCount, (a, virusCount) => a._virusCount = virusCount, Int32BitConverter.Instance);
-            builder.AddField(a => a._road, (a, roads) => a._road = roads, ReliableBitConverter.GetInstance(Road.BitConverter));
-            builder.AddField(a => a._speed, (a, speed) => a._speed = speed, SingleBitConverter.Instance);
-            BaseBitConverter = builder.Finalize();
+            VariableLengthBitConverterBuilder<VirusGroup> builder = new VariableLengthBitConverterBuilder<VirusGroup>();
+            builder.AddField(x => x._start.Id, (x, start) => { }, Int32BitConverter.Instance);
+            builder.AddField(x => x._end.Id, (x, end) => { }, Int32BitConverter.Instance);
+            builder.AddField(a => a._start.Roads.First(x=> x.Key == a._end.Id).Value.Roads.FindIndex(x => x == a._road), (a, road) => { }, Int32BitConverter.Instance);
+            builder.AddField(a => a._virusCount, (a, virusCount) => { }, Int32BitConverter.Instance);
+            builder.AddField(a => a._speed, (a, speed) => { }, SingleBitConverter.Instance);
+            NetworkBitConverter = builder.Finalize();
         }
+         
+        private BacteriumBase _start;
+        private BacteriumBase _end;
+        private Road _road;
+        private int _virusCount;
+        private float _speed;
 
-        protected int _virusCount;
-        protected Road _road;
-        protected float _speed;
-
-        protected VirusGroupBase() { }
-        protected VirusGroupBase(int virusCount, Road road, float speed)
+        public VirusGroup() { }
+        public VirusGroup(BacteriumBase start, BacteriumBase end, int virusCount, Road road, float speed)
         {
+            _start = start;
+            _end = end;
             _virusCount = virusCount;
             _road = road ?? throw new ArgumentNullException(nameof(road));
             _speed = speed;

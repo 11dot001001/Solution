@@ -15,11 +15,11 @@ namespace GameCore.Tools
         static Road()
         {
             VariableLengthBitConverterBuilder<Road> builder = new VariableLengthBitConverterBuilder<Road>();
-            builder.AddField(a => a._points, (a, points) => a._points = points.ToList(), IEnumerableReliableBitConverter.GetInstance(WayPositionBitConverter.Instance));
+            builder.AddField(a => a._points, (a, points) => a._points = points.ToList(), ListReliableBitConverter.GetInstance(WayPositionBitConverter.Instance));
             BitConverter = builder.Finalize();
         }
 
-        private IEnumerable<WayPosition> _points;
+        private List<WayPosition> _points;
 
         public Road()
         {
@@ -32,7 +32,7 @@ namespace GameCore.Tools
             EaseFactor = road.EaseFactor;
         }
 
-        public List<WayPosition> Points => _points.ToList();
+        public List<WayPosition> Points => _points;
         public float EaseFactor { get; set; }
 
 

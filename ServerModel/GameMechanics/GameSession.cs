@@ -17,7 +17,6 @@ namespace ServerModel.GameMechanics
         private readonly Dictionary<Client, Player> _players;
         private readonly List<VirusGroup> _virusGroups;
 
-
         public GameSession(IEnumerable<Client> clients, GameMode gameMode)
         {
             _bacteriumGrowthTimer = new Timer(_bacteriumGrowthPeriod);
@@ -60,11 +59,10 @@ namespace ServerModel.GameMechanics
         {
             List<int> bacteriumFrom = bacteriumsFrom.ToList();
             bacteriumFrom.Remove(bacteriumTo);
-            //Network.SendVirus(_players.Keys, bacteriumFrom, bacteriumTo, 100);
-
+            
             foreach (int bacteriumId in bacteriumFrom)
             {
-                Road road = _map.Bacteriums[bacteriumId].Roads[bacteriumTo].First();
+                Road road = _map.Bacteriums.First(x=> x.Id == bacteriumId).Roads.First(x=> x.Key == bacteriumTo).Value.Roads.First();
                 Network.SendVirusGroup(_players.Keys, new VirusGroup(_map.Bacteriums[bacteriumId], _map.Bacteriums[bacteriumTo], 100, road, 2f));
             }
         }

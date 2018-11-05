@@ -32,9 +32,6 @@ namespace GameServer.View
             DataContext = new RootViewModel();
         }
 
-        protected override void OnClosed(EventArgs e)
-        {
-            ((RootViewModel)DataContext).Model.Stop();
-        }
+        protected override void OnClosed(EventArgs e) => ((RootViewModel)DataContext).Model.Stop();
     }
 }
