@@ -1,8 +1,8 @@
-﻿using System.Collections;
+﻿using GameCore.Model;
+using ILibrary.Maths.Geometry2D;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using GameCore.Model;
-using ILibrary.Maths.Geometry2D;
 using UnityEngine;
 
 namespace GameCore.Tools
@@ -41,8 +41,7 @@ namespace GameCore.Tools
 
             Vector2 startDirection = _globalTarget.Position - _globalStart.Position;
             List<BacteriumBase> tempTargets = _bacteriums.Where(x => (x.Position - _globalStart.Position).magnitude < startDirection.magnitude).ToList();
-            //tempTargets.RemoveAll(x => Vector2.Angle(_globalStart.Position - x.Position, _globalTarget.Position - x.Position) < 135);
-            tempTargets.RemoveAll(x => Vector2.Angle(_globalStart.Position - x.Position, _globalStart.Position - _globalTarget.Position) > 75);
+            tempTargets.RemoveAll(x => Vector2.Angle(x.Position - _globalStart.Position, _globalTarget.Position - _globalStart.Position) > 90);
 
             if (!IsIntersect(_globalStart.Position, _globalTarget.Position, _bacteriums, out BacteriumBase none))
                 _roads.Add(road);
@@ -58,13 +57,13 @@ namespace GameCore.Tools
                 {
                     Road newRoad = new Road(road);
                     _roads.Add(newRoad);
-                    GetRoads(target, tangencyDirection1, _globalTarget, Vector2.zero, newRoad);
+                    GetRoads(_globalStart, Vector2.zero, target, Vector2.zero, newRoad);
                 }
                 if (!result2)
                 {
                     Road newRoad = new Road(road);
                     _roads.Add(newRoad);
-                    GetRoads(target, tangencyDirection2, _globalTarget, Vector2.zero, newRoad);
+                    GetRoads(_globalStart, Vector2.zero, target, Vector2.zero, newRoad);
                 }
             }
         }
@@ -90,9 +89,9 @@ namespace GameCore.Tools
                     Road newRoad = new Road(road);
                     _roads.Add(newRoad);
 
-                    nearestTangencyDirection = NearTangencyToEnd(start.Position + startDirection, nearest, end.Position + endDirection);
-                    road.EaseFactor *= 1 - Vector2.Angle(nearest.Position + leftTangencyDirection - start.Position + startDirection, nearest.Position + nearestTangencyDirection - start.Position + startDirection) / 180;
-                    newRoad.EaseFactor *= 1 - Vector2.Angle(nearest.Position + rightTangencyDirection - start.Position + startDirection, nearest.Position + nearestTangencyDirection - start.Position + startDirection) / 180;
+                    //nearestTangencyDirection = NearTangencyToEnd(start.Position + startDirection, nearest, end.Position + endDirection);
+                    //road.EaseFactor *= 1 - Vector2.Angle(nearest.Position + leftTangencyDirection - start.Position + startDirection, nearest.Position + nearestTangencyDirection - start.Position + startDirection) / 180;
+                    //newRoad.EaseFactor *= 1 - Vector2.Angle(nearest.Position + rightTangencyDirection - start.Position + startDirection, nearest.Position + nearestTangencyDirection - start.Position + startDirection) / 180;
 
                     GetRoads(start, startDirection, nearest, leftTangencyDirection, road);
                     GetRoads(nearest, leftTangencyDirection, _globalTarget, Vector2.zero, road);
@@ -100,9 +99,44 @@ namespace GameCore.Tools
                     GetRoads(nearest, rightTangencyDirection, _globalTarget, Vector2.zero, newRoad);
                 }
             }
+            else if (start == _globalStart)
+            {
+                Geometry2D.Point2CircleTangencyDirection(start.Transform.Position, end.Transform.Circle, out Vector2 tangencyDirection1, out Vector2 tangencyDirection2);
+
+                _bacteriums.Remove(start);
+                _bacteriums.Remove(end);
+                bool result = IsIntersect(start.Position, end.Position + tangencyDirection1, _bacteriums, out BacteriumBase nearest);
+                _bacteriums.Add(start);
+                _bacteriums.Add(end);
+
+                Road newRoad = new Road(road);
+                if (!result)
+                {
+                    _roads.Add(newRoad);
+                    GetRoads(end, tangencyDirection1, _globalTarget, Vector2.zero, newRoad);
+                }
+                else
+                    GetRoads(start, Vector2.zero, nearest, Vector2.zero, newRoad);
+
+                _bacteriums.Remove(start);
+                _bacteriums.Remove(end);
+                bool result2 = IsIntersect(start.Position, end.Position + tangencyDirection2, _bacteriums, out nearest);
+                _bacteriums.Add(start);
+                _bacteriums.Add(end);
+
+                newRoad = new Road(road);
+                if (!result2)
+                {
+                    _roads.Add(newRoad);
+                    GetRoads(end, tangencyDirection2, _globalTarget, Vector2.zero, newRoad);
+                }
+                else
+                    GetRoads(start, Vector2.zero, nearest, Vector2.zero, newRoad);
+            }
             else
             {
-                Geometry2D.CircleDirection2CircleDirection(start.Transform.Circle, startDirection, end.Transform.Circle, endDirection, out Vector2 startEndDirection, out Vector2 endEndDirection);
+                bool isClockRotation = Vector2.SignedAngle(startDirection, road.Last().Position - start.Position) <= 0 ? false : true;
+                Geometry2D.CircleDirection2CircleDirection(start.Transform.Circle, startDirection, end.Transform.Circle, endDirection, isClockRotation, _rotateAngle, out Vector2 startEndDirection, out Vector2 endEndDirection);
 
                 _bacteriums.Remove(start);
                 _bacteriums.Remove(end);
@@ -112,9 +146,9 @@ namespace GameCore.Tools
 
                 if (!isIntersect)
                 {
-                    Geometry2D.Rotate(start.Transform.Circle, startDirection, startEndDirection, _rotateAngle, out List<Vector2> way);
+                    Geometry2D.Rotate(start.Transform.Circle, startDirection, startEndDirection, _rotateAngle, isClockRotation, out List<Vector2> way);
                     road.Points.AddRange(way.Select(x => new WayPosition(x)));
-                    Geometry2D.Rotate(end.Transform.Circle, endEndDirection, endDirection, _rotateAngle, out way);
+                    Geometry2D.Rotate(end.Transform.Circle, endEndDirection, endDirection, _rotateAngle, isClockRotation, out way);
                     road.Points.AddRange(way.Select(x => new WayPosition(x)));
                 }
                 else
