@@ -28,7 +28,6 @@ namespace GameCore.Model
         public Dictionary<int, Path> Roads => _roads;
         public BacteriumData BacteriumData => _bacteriumData;
 
-        public event EventHandler PositionChanged;
         public event EventHandler RadiusChanged;
     }
     public class Path

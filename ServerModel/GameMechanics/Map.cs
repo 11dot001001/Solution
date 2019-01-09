@@ -16,10 +16,7 @@ namespace ServerModel.GameMechanics
         {
             _bacteriums = map.Bacteriums ?? throw new ArgumentNullException(nameof(map));
             foreach (Bacterium item in _bacteriums)
-            {
-                item.PositionChanged += positionChanged;
                 item.RadiusChanged += radiusChanged;
-            }
         }
 
         public Bacterium[] Bacteriums => _bacteriums;

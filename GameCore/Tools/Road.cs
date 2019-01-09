@@ -1,10 +1,10 @@
 ﻿using Noname.BitConversion;
-using Noname.BitConversion.System;
 using Noname.BitConversion.System.Collections.Generic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace GameCore.Tools
 {
@@ -20,21 +20,31 @@ namespace GameCore.Tools
         }
 
         private List<WayPosition> _points;
+        private float _length;
 
         public Road()
         {
             _points = new List<WayPosition>();
-            EaseFactor = 1f;
+            DirectionFactor = 1f;
+            _length = float.NaN;
         }
         public Road(Road road)
         {
             _points = new List<WayPosition>(road.Points);
-            EaseFactor = road.EaseFactor;
+            DirectionFactor = road.DirectionFactor;
+            _length = float.NaN;
         }
 
         public List<WayPosition> Points => _points;
-        public float EaseFactor { get; set; }
+        public float DirectionFactor { get; set; }
+        public float Length => !float.IsNaN(_length) ? _length : throw new Exception();
 
+        public void SetLength()
+        {
+            _length = 0;
+            for (int i = 0; i < _points.Count-1; i++)
+                _length += Vector2.Distance(_points[i].Position, _points[i + 1].Position);
+        }
 
         public IEnumerator<WayPosition> GetEnumerator() => Points.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => Points.GetEnumerator();
