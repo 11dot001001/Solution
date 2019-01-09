@@ -15,9 +15,6 @@ namespace GameServer.ViewModel
 {
     public class RootViewModel : ModelBase
     {
-        public ObservableCollection<ClientViewModel> ClientCollection { get; } = new ObservableCollection<ClientViewModel>();
-        public RootModel Model { get; }
-        public Command UpdateClientsCommmand { get; }
 
         public RootViewModel()
         {
@@ -25,6 +22,10 @@ namespace GameServer.ViewModel
             UpdateClientsCommmand = new Command(OnUpdateClients);
             Model.AuthorizedClients.CollectionChanged += AuthorizedClients_CollectionChanged;
         }
+
+        public ObservableCollection<ClientViewModel> ClientCollection { get; } = new ObservableCollection<ClientViewModel>();
+        public RootModel Model { get; }
+        public Command UpdateClientsCommmand { get; }
 
         private void AuthorizedClients_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {

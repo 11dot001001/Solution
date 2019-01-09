@@ -21,7 +21,6 @@ namespace GameCore.Model
         }
 
         public int Id => _bacteriumData.Id;
-        public Vector2 Position { get => _bacteriumData._transform.Position; set { _bacteriumData._transform.Position = value; PositionChanged?.Invoke(this, EventArgs.Empty); } }
         public int VirusCount { get => _bacteriumData._virusCount; set { _bacteriumData._virusCount = value; RadiusChanged?.Invoke(this, EventArgs.Empty); } }
         public float TransportRadius => _bacteriumData._transform.TransportRadius;
         public float BacteriumRadius => _bacteriumData._transform.BacteriumRadius;
