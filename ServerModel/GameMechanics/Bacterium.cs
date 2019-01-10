@@ -14,6 +14,8 @@ namespace ServerModel.GameMechanics
         public Bacterium() : base() { }
         public Bacterium(int id, int roadsCount, Vector2 areaPosition, float maxBacteriumRadius, float minBacteriumRadius): base(roadsCount, new BacteriumData(id, OwnerType.None, new GameCore.Model.Transform(maxBacteriumRadius, minBacteriumRadius, new Circle(areaPosition, maxBacteriumRadius + 0.3f)), 10)) { }
 
+        public Client Owner { get; set; }
+
         public void GetViruses(Client clientVirus, int count)
         {
             //if (Owner == null)
@@ -36,7 +38,6 @@ namespace ServerModel.GameMechanics
             //        data.virusCount -= count;
             //}
         }
-
         public void Growth(object sender, EventArgs e)
         {
             //VirusCount += growthValue;

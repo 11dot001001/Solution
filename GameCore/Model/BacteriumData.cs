@@ -15,6 +15,8 @@ namespace GameCore.Model
 
             public override sealed void GetBytes(BacteriumData value, byte[] bytes, int offset)
             {
+                if (value.Owner == OwnerType.None)
+                    throw new System.Exception();
                 Int32BitConverter.Instance.GetBytes(value._id, bytes, ref offset);
                 ByteBitConverter.Instance.GetBytes((byte)value._owner, bytes, ref offset);
                 Transform.BitConverter.Instance.GetBytes(value._transform, bytes, ref offset);
@@ -24,9 +26,9 @@ namespace GameCore.Model
         }
 
         internal int _id;
+        internal OwnerType _owner;
         internal Transform _transform;
         internal int _virusCount;
-        internal OwnerType _owner;
 
         public BacteriumData(int id, OwnerType owner, Transform transform, int virusCount)
         {

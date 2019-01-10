@@ -26,13 +26,12 @@ namespace ServerModel
                 BacteriumData[] buffer = new BacteriumData[map.Bacteriums.Length];
                 int offset = 0;
                 foreach (Bacterium item in map.Bacteriums)
-                    buffer[offset++] = player.Bacteriums.Contains(item) ? new BacteriumData(item.Id, OwnerType.My, item.Transform, item.VirusCount) : new BacteriumData(item.Id, OwnerType.None, item.Transform, item.VirusCount);
+                    buffer[offset++] = player.Bacteriums.Contains(item) ? new BacteriumData(item.Id, OwnerType.My, item.Transform, item.Data.VirusCount) : new BacteriumData(item.Id, OwnerType.Nobody, item.Transform, item.Data.VirusCount);
                 _server.TCPCall(_server.SendGameSettings, new GameSettings(buffer), player.Client);
             }
         }
         public static void StartGame(IEnumerable<Client> clients) => _server.TCPCall(_server.StartGame, clients);
-        public static void SendVirus(IEnumerable<Client> clients, IEnumerable<int> bacteriums, int target, int count) => _server.TCPCall(_server.SendViruses, bacteriums, target, count, clients);
-        public static void SendVirusGroup(IEnumerable<Client> clients, VirusGroup virusGroup) => _server.TCPCall(_server.SendVirusGroup, virusGroup, clients);
+        public static void SendVirusGroup(Client client, VirusGroupData virusGroupData) => _server.TCPCall(_server.SendVirusGroup, virusGroupData, client);
         public static void Initialize(int port, string nameOrConnectionString) => _server = new Server(port, nameOrConnectionString, "");
         public static void Start() => _server.Start();
         public static void Stop() => _server.Stop();

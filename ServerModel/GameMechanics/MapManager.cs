@@ -36,7 +36,7 @@ namespace ServerModel.GameMechanics
         {
             if (!_maps.TryGetValue(gameMode, out List<Map> maps))
                 throw new Exception();
-            return new Map(maps.First(), gameSession.BacteriumPositionChanged, gameSession.BacteriumRadiusChanged);
+            return new Map(maps.First());
         }
     }
 }

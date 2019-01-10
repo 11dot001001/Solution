@@ -1,4 +1,5 @@
-﻿using GameCore.Model;
+﻿using GameCore.Enums;
+using GameCore.Model;
 using GameCore.Tools;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,14 @@ namespace ServerModel.GameMechanics
     public sealed class GameSession
     {
         private const float _bacteriumGrowthPeriod = 1000f;
+        private const float _virusSpeed = 1f;
 
         private readonly Map _map;
         private readonly GameMode _gameMode;
         private readonly Timer _bacteriumGrowthTimer;
         private readonly Dictionary<Client, Player> _players;
         private readonly List<VirusGroup> _virusGroups;
+        private readonly Random _random = new Random();
 
         public GameSession(IEnumerable<Client> clients, GameMode gameMode)
         {
@@ -28,19 +31,18 @@ namespace ServerModel.GameMechanics
                 client.CurrentGame = this;
                 _players.Add(client, new Player(client));
             }
+            foreach (Player player in _players.Values)
+                foreach (Player otherPlayer in _players.Values)
+                {
+                    if (player == otherPlayer)
+                        continue;
+                    player.PlayerRelations.Add(otherPlayer, OwnerType.Enemy);
+                }
             _map = MapManager.GetMap(this, gameMode, clients.Count());
             SendSettings();
         }
 
-        public void BacteriumPositionChanged(object sender, EventArgs e)
-        {
-            Bacterium bacterium = (Bacterium)sender;
-        }
-        public void BacteriumRadiusChanged(object sender, EventArgs e)
-        {
-            Bacterium bacterium = (Bacterium)sender;
-        }
-        private void SendSettings()  => Network.SendGameSettings(_players.Values, _map);
+        private void SendSettings() => Network.SendGameSettings(_players.Values, _map);
         private void TryToStartGame()
         {
             if (_players.Values.Count(x => x.State == State.Ready) != _players.Count)
@@ -55,15 +57,35 @@ namespace ServerModel.GameMechanics
                 player.Bacteriums.Add(_map.Bacteriums[bacteriumNumber++]);
         }
 
-        public void RequestSendViruses(IEnumerable<int> bacteriumsFrom, int bacteriumTo)
+        public void RequestSendViruses(Client client, IEnumerable<int> bacteriumsFrom, int bacteriumTo)
         {
-            List<int> bacteriumFrom = bacteriumsFrom.ToList();
-            bacteriumFrom.Remove(bacteriumTo);
-            
-            foreach (int bacteriumId in bacteriumFrom)
+            List<int> bacteriumsFromId = bacteriumsFrom.ToList();
+            bacteriumsFromId.Remove(bacteriumTo);
+            List<Bacterium> bacteriumFrom = new List<Bacterium>(bacteriumsFromId.Count);
+            for (int i = 0; i < bacteriumsFromId.Count; i++)
+                bacteriumFrom.Add(_map.Bacteriums[bacteriumsFromId[i]]);
+
+            //int removeCount = bacteriumFrom.RemoveAll(x => x.Owner != client);
+            //if (removeCount != 0)
+            //    MessageBox.Show("Some problem. " + client.IPAddress + ":" + client.Port);
+
+            _players.TryGetValue(client, out Player player);
+            foreach (Bacterium bacterium in bacteriumFrom)
             {
-                Road road = _map.Bacteriums.First(x=> x.Id == bacteriumId).Roads.First(x=> x.Key == bacteriumTo).Value.Roads.First();
-                Network.SendVirusGroup(_players.Keys, new VirusGroup(_map.Bacteriums[bacteriumId], _map.Bacteriums[bacteriumTo], 100, road, 2f));
+                Path path = bacterium.Roads.First(x => x.Key == bacteriumTo).Value;
+                int roadNumber = _random.Next(path.Roads.Count);
+                Road road = path.Roads[roadNumber];
+                VirusGroup virusGroup;
+                _virusGroups.Add(virusGroup = new VirusGroup(_virusSpeed, road, roadNumber, player));
+                SendVirusGroup(virusGroup);
+            }
+        }
+        public void SendVirusGroup(VirusGroup virusGroup)
+        {
+            foreach (Player player in _players.Values)
+            {
+                player.PlayerRelations.TryGetValue(player, out OwnerType ownerType);
+                Network.SendVirusGroup(player.Client, new VirusGroupData(virusGroup.VirusGroupData, ownerType));
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using Noname.BitConversion;
+﻿using GameCore.Model;
+using Noname.BitConversion;
 using Noname.BitConversion.System.Collections.Generic;
 using System;
 using System.Collections;
@@ -10,34 +11,32 @@ namespace GameCore.Tools
 {
     public class Road : IEnumerable<WayPosition>
     {
-        static public readonly VariableLengthBitConverter<Road> BitConverter;
-
-        static Road()
-        {
-            VariableLengthBitConverterBuilder<Road> builder = new VariableLengthBitConverterBuilder<Road>();
-            builder.AddField(a => a._points, (a, points) => a._points = points.ToList(), ListReliableBitConverter.GetInstance(WayPositionBitConverter.Instance));
-            BitConverter = builder.Finalize();
-        }
-
         private List<WayPosition> _points;
         private float _length;
 
-        public Road()
+        public Road() { }
+        public Road(BacteriumBase start, BacteriumBase end)
         {
             _points = new List<WayPosition>();
             DirectionFactor = 1f;
             _length = float.NaN;
+            Start = start;
+            End = end;
         }
         public Road(Road road)
         {
             _points = new List<WayPosition>(road.Points);
             DirectionFactor = road.DirectionFactor;
             _length = float.NaN;
+            Start = road.Start;
+            End = road.End;
         }
 
         public List<WayPosition> Points => _points;
         public float DirectionFactor { get; set; }
         public float Length => !float.IsNaN(_length) ? _length : throw new Exception();
+        public BacteriumBase Start { get; private set; }
+        public BacteriumBase End { get; private set; }
 
         public void SetLength()
         {

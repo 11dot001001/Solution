@@ -23,7 +23,6 @@ namespace GameCore.Tools
                 Direction = direction;
             }
         }
-
         private const float _rotateAngle = 10f;
         private List<BacteriumBase> _bacteriums;
         private List<Road> _roads = new List<Road>();
@@ -53,7 +52,7 @@ namespace GameCore.Tools
         {
             _bacteriums.Remove(_globalStart);
             _bacteriums.Remove(_globalTarget);
-            Road road = new Road();
+            Road road = new Road(_globalStart, _globalTarget);
             road.Points.Add(new WayPosition(_globalStart.Transform.Position));
 
             List<BacteriumBase> tempTargets = _bacteriums.ToList();
@@ -91,7 +90,6 @@ namespace GameCore.Tools
                 _bacteriums.Remove(_globalStart);
             }
         }
-
         private void GetRoads(Vertex vertex, Road road)
         {
             bool isIntersect;
@@ -184,7 +182,6 @@ namespace GameCore.Tools
                 GetRoads(vertex, nearest2, road);
             _roads.Remove(road);
         }      
-
         private bool IsClockRotation(Vector2 startPosition, Circle endCircle, Vector2 endDirection)
         {
             Vector2 mainDirection = endCircle.Position - startPosition;
@@ -202,7 +199,7 @@ namespace GameCore.Tools
             float minDistance = float.MaxValue;
             int minDistanceBacterium = 0;
             for (int i = 0; i < residualBacteriums.Count; i++)
-                if (IsIntersect(current, target, residualBacteriums[i].Transform.Position, residualBacteriums[i].BacteriumRadius))
+                if (IsIntersect(current, target, residualBacteriums[i].Transform.Position, residualBacteriums[i].Transform.BacteriumRadius))
                 {
                     float currentDistance = Vector2.Distance(residualBacteriums[i].Transform.Position, current);
                     if (currentDistance < minDistance)
@@ -228,12 +225,6 @@ namespace GameCore.Tools
             float distance = (center - point).magnitude;
 
             return distance > radius ? false : true;
-        }
-        private Vector2 NearTangencyToEnd(Vector2 start, BacteriumBase circle, Vector2 end)
-        {
-            Geometry2D.Point2CircleTangencyDirectionOriented(start, circle.Transform.Circle, out Vector2 leftTangencyDirection, out Vector2 rightTangencyDirection);
-            Vector2 direction = end - start;
-            return Vector2.Angle(circle.Transform.Position + leftTangencyDirection - start, direction) < Vector2.Angle(circle.Transform.Position + rightTangencyDirection - start, direction) ? leftTangencyDirection : rightTangencyDirection;
         }
 
         public IEnumerator<Road> GetEnumerator() => _roads.GetEnumerator();

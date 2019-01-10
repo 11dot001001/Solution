@@ -5,6 +5,7 @@
         My,
         Friend,
         Enemy,
+        Nobody,
         None
     }
 }

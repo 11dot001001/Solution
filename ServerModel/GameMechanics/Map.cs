@@ -12,12 +12,7 @@ namespace ServerModel.GameMechanics
         private Bacterium[] _bacteriums;
 
         public Map(float[] bacteriumsData) => Conversion(bacteriumsData ?? throw new ArgumentNullException(nameof(bacteriumsData)));
-        public Map(Map map, EventHandler positionChanged, EventHandler radiusChanged)
-        {
-            _bacteriums = map.Bacteriums ?? throw new ArgumentNullException(nameof(map));
-            foreach (Bacterium item in _bacteriums)
-                item.RadiusChanged += radiusChanged;
-        }
+        public Map(Map map) => _bacteriums = map.Bacteriums ?? throw new ArgumentNullException(nameof(map));
 
         public Bacterium[] Bacteriums => _bacteriums;
 

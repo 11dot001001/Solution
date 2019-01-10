@@ -16,6 +16,12 @@ namespace ServerModel
     {
         private readonly DataContext _database;
 
+        public Server(int port, string nameOrConnectionString, string mapManagerDirectory) : base(port)
+        {
+            _database = new DataContext(nameOrConnectionString);
+            MapManager.Initialize(mapManagerDirectory);
+        }
+
         public RemoteProcedure<bool> EmailExistsResponse { get; set; }
         public RemoteProcedure<bool> NicknameExistsResponse { get; set; }
         public RemoteProcedure<byte, Account> SignUpResponse { get; set; }
@@ -24,18 +30,10 @@ namespace ServerModel
         public RemoteProcedure<Account> ReceiveOtherAccount { get; set; }
         public RemoteProcedure<GameSettings> SendGameSettings { get; set; }
         public RemoteProcedure StartGame { get; set; }
-        public RemoteProcedure<IEnumerable<int>, int, int> SendViruses { get; private set; }
-        public RemoteProcedure<VirusGroup> SendVirusGroup { get; private set; }
+        public RemoteProcedure<VirusGroupData> SendVirusGroup { get; private set; }
 
         public List<Client> AuthorizedClients { get; set; } = new List<Client>();
         public Dictionary<int, Client> FindGameClients { get; set; } = new Dictionary<int, Client>();
-
-
-        public Server(int port, string nameOrConnectionString, string mapManagerDirectory) : base(port)
-        {
-            _database = new DataContext(nameOrConnectionString);
-            MapManager.Initialize(mapManagerDirectory);
-        }
 
         private void TryToCreateGame()
         {
@@ -75,8 +73,7 @@ namespace ServerModel
             ReceiveOtherAccount = DefineRemoteProcedure(otherAccountNullableConverter);
             SendGameSettings = DefineRemoteProcedure(ReliableBitConverter.GetInstance(GameSettings.BitConverter));
             StartGame = DefineRemoteProcedure();
-            SendViruses = DefineRemoteProcedure(iEnumerableBacteriumId, Int32BitConverter.Instance, Int32BitConverter.Instance);
-            SendVirusGroup = DefineRemoteProcedure(ReliableBitConverter.GetInstance(VirusGroup.NetworkBitConverter));
+            SendVirusGroup = DefineRemoteProcedure(VirusGroupData.BitConverter.Instance);
         }
 
         #region Network
@@ -110,7 +107,7 @@ namespace ServerModel
             FindGameClients.Add(client.AccountInfo.Id, client);
             TryToCreateGame();
         }
-        private void RequestSendViruses(Client client, IEnumerable<int> bacteriumsFrom, int bacteriumTo) => client.CurrentGame.RequestSendViruses(bacteriumsFrom, bacteriumTo);
+        private void RequestSendViruses(Client client, IEnumerable<int> bacteriumsFrom, int bacteriumTo) => client.CurrentGame.RequestSendViruses(client, bacteriumsFrom, bacteriumTo);
         #endregion 
     }
 }
