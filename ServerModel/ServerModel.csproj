@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameMechanics\Bacterium.cs" />
+    <Compile Include="GameMechanics\GameManager.cs" />
     <Compile Include="GameMechanics\GameMode.cs" />
     <Compile Include="GameMechanics\GameSession.cs" />
     <Compile Include="GameMechanics\Map.cs" />

@@ -4,27 +4,23 @@ using GameCore.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Timers;
+using System.Windows;
 
 namespace ServerModel.GameMechanics
 {
     public sealed class GameSession
     {
-        private const float _bacteriumGrowthPeriod = 1000f;
         private const float _virusSpeed = 1f;
-
         private readonly Map _map;
         private readonly GameMode _gameMode;
-        private readonly Timer _bacteriumGrowthTimer;
         private readonly Dictionary<Client, Player> _players;
-        private readonly List<VirusGroup> _virusGroups;
         private readonly Random _random = new Random();
+        private readonly List<VirusGroup> _virusGroups;
 
         public GameSession(IEnumerable<Client> clients, GameMode gameMode)
         {
-            _bacteriumGrowthTimer = new Timer(_bacteriumGrowthPeriod);
-            _players = new Dictionary<Client, Player>();
             _virusGroups = new List<VirusGroup>();
+            _players = new Dictionary<Client, Player>();
             _gameMode = gameMode;
             foreach (Client client in clients)
             {
@@ -48,7 +44,6 @@ namespace ServerModel.GameMechanics
             if (_players.Values.Count(x => x.State == State.Ready) != _players.Count)
                 return;
             Network.StartGame(_players.Keys);
-            _bacteriumGrowthTimer.Start();
         }
         private void InitializePlayerBacteriums()
         {
@@ -56,7 +51,38 @@ namespace ServerModel.GameMechanics
             foreach (Player player in _players.Values)
                 player.Bacteriums.Add(_map.Bacteriums[bacteriumNumber++]);
         }
+        private void SendVirusGroup(VirusGroup virusGroup)
+        {
+            foreach (Player player in _players.Values)
+            {
+                player.PlayerRelations.TryGetValue(player, out OwnerType ownerType);
+                Network.SendVirusGroup(player.Client, new VirusGroupData(virusGroup.VirusGroupData, ownerType));
+            }
+        }
+        private void VirusGroupArrived(VirusGroup virusGroup) => MessageBox.Show("группа пришла");
 
+        private static DateTime _dateTime1;
+        private static DateTime _dateTime2;
+        private static List<double> _listes = new List<double>();
+        static GameSession() => _dateTime2 = DateTime.Now;
+
+        public void UpdateVirusGroup()
+        {
+            lock (_virusGroups)
+            {
+                _dateTime1 = DateTime.Now;
+                _listes.Add((_dateTime2 - _dateTime1).TotalMilliseconds);
+                for (int i = _virusGroups.Count - 1; i >= 0; i--)
+                {
+                    VirusGroup virusGroup = _virusGroups[i];
+                    if (_dateTime1 - virusGroup.Start < virusGroup.DrivingTime)
+                        continue;
+                    VirusGroupArrived(virusGroup);
+                    _virusGroups.RemoveAt(i);
+                }
+                _dateTime2 = DateTime.Now;
+            }
+        }
         public void RequestSendViruses(Client client, IEnumerable<int> bacteriumsFrom, int bacteriumTo)
         {
             List<int> bacteriumsFromId = bacteriumsFrom.ToList();
@@ -78,14 +104,6 @@ namespace ServerModel.GameMechanics
                 VirusGroup virusGroup;
                 _virusGroups.Add(virusGroup = new VirusGroup(_virusSpeed, road, roadNumber, player));
                 SendVirusGroup(virusGroup);
-            }
-        }
-        public void SendVirusGroup(VirusGroup virusGroup)
-        {
-            foreach (Player player in _players.Values)
-            {
-                player.PlayerRelations.TryGetValue(player, out OwnerType ownerType);
-                Network.SendVirusGroup(player.Client, new VirusGroupData(virusGroup.VirusGroupData, ownerType));
             }
         }
     }

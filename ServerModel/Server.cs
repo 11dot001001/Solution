@@ -15,10 +15,12 @@ namespace ServerModel
     public class Server : RPCServer<Client>
     {
         private readonly DataContext _database;
+        private readonly GameManager _gameManager;
 
         public Server(int port, string nameOrConnectionString, string mapManagerDirectory) : base(port)
         {
             _database = new DataContext(nameOrConnectionString);
+            _gameManager = new GameManager();
             MapManager.Initialize(mapManagerDirectory);
         }
 
@@ -33,18 +35,6 @@ namespace ServerModel
         public RemoteProcedure<VirusGroupData> SendVirusGroup { get; private set; }
 
         public List<Client> AuthorizedClients { get; set; } = new List<Client>();
-        public Dictionary<int, Client> FindGameClients { get; set; } = new Dictionary<int, Client>();
-
-        private void TryToCreateGame()
-        {
-            if (FindGameClients.Count < 2)
-                return;
-            Client client1 = FindGameClients.First().Value;
-            FindGameClients.Remove(client1.AccountInfo.Id);
-            Client client2 = FindGameClients.First().Value;
-            FindGameClients.Remove(client2.AccountInfo.Id);
-            GameSession game = new GameSession(new Client[] { client1, client2 }, GameMode.OneByOne);
-        }
 
         protected override void InitializeLocalProcedures()
         {
@@ -102,11 +92,7 @@ namespace ServerModel
         private void IsEmailExists(Client client, string email) => Network.EmailExistsResponse(_database.IsEmailExist(email), client);
         private void IsNicknameExists(Client client, string nickname) => Network.NicknameExistsResponse(_database.IsNicknameExist(nickname), client);
         private void GetOtherAccount(Client client, int id) => Network.ReceiveOtherAccount(_database.GetAccountById(id), client);
-        private void FindGame(Client client)
-        {
-            FindGameClients.Add(client.AccountInfo.Id, client);
-            TryToCreateGame();
-        }
+        private void FindGame(Client client) => _gameManager.ClientReadyToFindGame(client);
         private void RequestSendViruses(Client client, IEnumerable<int> bacteriumsFrom, int bacteriumTo) => client.CurrentGame.RequestSendViruses(client, bacteriumsFrom, bacteriumTo);
         #endregion 
     }

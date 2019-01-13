@@ -1,6 +1,8 @@
 ﻿using GameCore.Model;
 using GameCore.Tools;
 using System;
+using System.Collections.Generic;
+using System.Timers;
 
 namespace ServerModel.GameMechanics
 {
@@ -11,6 +13,9 @@ namespace ServerModel.GameMechanics
         private readonly int _roadId;
         private readonly Player _owner;
 
+        public readonly TimeSpan DrivingTime;
+        public readonly DateTime Start;
+
         public VirusGroup() { }
         public VirusGroup(float speed, Road road, int roadId, Player owner)
         {
@@ -18,9 +23,10 @@ namespace ServerModel.GameMechanics
             _road = road ?? throw new ArgumentNullException(nameof(road));
             _roadId = roadId;
             _owner = owner ?? throw new ArgumentNullException(nameof(owner));
+            DrivingTime = TimeSpan.FromSeconds(road.Length / _speed);
+            Start = DateTime.Now;
         }
 
-        public float TimeToEnd { get; set; }
         public VirusGroupData VirusGroupData => new VirusGroupData(_roadId, _road.Start.Id, _road.Start.Data.VirusCount, _road.End.Id);
     }
 }

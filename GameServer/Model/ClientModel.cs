@@ -15,9 +15,6 @@ namespace GameServer.Model
 
         public ClientModel() { }
 
-        public ClientModel(Account accountInfo)
-        {
-            AccountProperty.Value = accountInfo;
-        }
+        public ClientModel(Account accountInfo) => AccountProperty.Value = accountInfo;
     }
 }

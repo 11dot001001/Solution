@@ -15,7 +15,7 @@ namespace GameServer.Model
     {
         public ObservableCollection<ClientModel> AuthorizedClients { get; set; } = new ObservableCollection<ClientModel>();
 
-        public RootModel()
+        public RootModel() 
         {
             Network.Initialize(25000, @"Data Source=.\Sqlexpress;Initial Catalog=GameDatabase;Integrated Security=True");
             Network.Start();
