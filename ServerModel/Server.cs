@@ -7,6 +7,7 @@ using Noname.BitConversion.System;
 using Noname.BitConversion.System.Collections.Generic;
 using Noname.Net.RPC;
 using ServerModel.GameMechanics;
+using ServerModel.Managers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -53,8 +54,6 @@ namespace ServerModel
         {
             ReliableBitConverter<Account> accountNullableConverter = ReliableBitConverter.GetInstance(NullableBitConverter.GetInstance(Account.OwnBitConverter));
             ReliableBitConverter<Account> otherAccountNullableConverter = ReliableBitConverter.GetInstance(NullableBitConverter.GetInstance(Account.BitConverter));
-            ReliableBitConverter<IEnumerable<BacteriumData>> iEnumerableBacteriumConverter = ReliableBitConverter.GetInstance(IEnumerableVariableLengthBitConverter.GetInstance(BacteriumData.BitConverter.Instance));
-            ReliableBitConverter<IEnumerable<int>> iEnumerableBacteriumId = ReliableBitConverter.GetInstance(IEnumerableVariableLengthBitConverter.GetInstance(Int32BitConverter.Instance));
 
             EmailExistsResponse = DefineRemoteProcedure(BooleanBitConverter.Instance);
             NicknameExistsResponse = DefineRemoteProcedure(BooleanBitConverter.Instance);

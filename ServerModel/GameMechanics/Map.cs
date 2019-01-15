@@ -1,34 +1,46 @@
-﻿using GameCore.Model;
+﻿using GameCore.Enums;
+using GameCore.Model;
 using GameCore.Tools;
+using ILibrary.Maths.Geometry2D;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using Transform = GameCore.Model.Transform;
 
 namespace ServerModel.GameMechanics
 {
-    public class Map
+    public class Map : ICloneable
     {
-        private Bacterium[] _bacteriums;
-
         public Map(float[] bacteriumsData) => Conversion(bacteriumsData ?? throw new ArgumentNullException(nameof(bacteriumsData)));
-        public Map(Map map) => _bacteriums = map.Bacteriums ?? throw new ArgumentNullException(nameof(map));
+        public Map(BacteriumModel[] bacteriums, RoadManager roadManager, IEnumerable<float> data)
+        {
+            Bacteriums = bacteriums ?? throw new ArgumentNullException(nameof(bacteriums));
+            RoadManager = roadManager ?? throw new ArgumentNullException(nameof(roadManager));
+            Data = data ?? throw new ArgumentNullException(nameof(data));
+        }
 
-        public Bacterium[] Bacteriums => _bacteriums;
+        public BacteriumModel[] Bacteriums { get; private set; }
+        public RoadManager RoadManager { get; private set; }
+        public IEnumerable<float> Data { get; private set; }
 
         private void Conversion(float[] bacteriumsData)
         {
+            Data = bacteriumsData;
             int bacteriumCount = bacteriumsData.Length / 4;
-            _bacteriums = new Bacterium[bacteriumCount];
+            Bacteriums = new BacteriumModel[bacteriumCount];
 
             int offset = 0;
             for (int i = 0; i < bacteriumCount; i++)
-                _bacteriums[i] = new Bacterium(i, bacteriumCount, new Vector2(bacteriumsData[offset++], bacteriumsData[offset++]), bacteriumsData[offset++], bacteriumsData[offset++]);
-
-            for (int i = 0; i < _bacteriums.Length; i++)
-                for (int j = 0; j < _bacteriums.Length; j++)
-                    if (j != i)
-                        _bacteriums[i].Roads.Add(_bacteriums[j].Id, new Path(_bacteriums[j], new List<Road>(new RoadManager(_bacteriums[i], _bacteriums[j], _bacteriums).Roads)));
+            {
+                int id = i;
+                Vector2 areaPosition = new Vector2(bacteriumsData[offset++], bacteriumsData[offset++]);
+                float maxBacteriumRadius = bacteriumsData[offset++];
+                float minBacteriumRadius = bacteriumsData[offset++];
+                Bacteriums[i] = new BacteriumModel(id, OwnerType.None, new Transform(maxBacteriumRadius, minBacteriumRadius, new Circle(areaPosition, maxBacteriumRadius + 0.3f)), 10);
+            }
+            RoadManager = new RoadManager(Bacteriums);
         }
+
+        public object Clone() => new Map(Bacteriums, RoadManager, Data);
     }
 }

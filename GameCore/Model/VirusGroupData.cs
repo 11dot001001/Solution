@@ -27,11 +27,11 @@ namespace GameCore.Model
             public override sealed VirusGroupData GetInstance(byte[] bytes, int startIndex) => new VirusGroupData(Int32BitConverter.Instance.GetInstance(bytes, ref startIndex), Int32BitConverter.Instance.GetInstance(bytes, ref startIndex), Int32BitConverter.Instance.GetInstance(bytes, ref startIndex), Int32BitConverter.Instance.GetInstance(bytes, ref startIndex), (OwnerType)ByteBitConverter.Instance.GetInstance(bytes, ref startIndex));
         }
 
-        internal int _roadId;
-        internal int _startBacteriumId;
-        internal int _startBacteriumVirusCount;
-        internal int _endBacteriumId;
-        internal OwnerType _owner;
+        private int _roadId;
+        private int _startBacteriumId;
+        private int _startBacteriumVirusCount;
+        private int _endBacteriumId;
+        private OwnerType _owner;
 
         public VirusGroupData(VirusGroupData virusGroupData, OwnerType owner) : this(virusGroupData._roadId, virusGroupData._startBacteriumId, virusGroupData._startBacteriumVirusCount, virusGroupData._endBacteriumId, virusGroupData._owner) { }
         public VirusGroupData(int roadId, int startBacteriumId, int startBacteriumVirusCount, int endBacteriumId) : this(roadId, startBacteriumId, startBacteriumVirusCount, endBacteriumId, OwnerType.None) { }
@@ -43,7 +43,6 @@ namespace GameCore.Model
             _endBacteriumId = endBacteriumId;
             _owner = owner;
         }
-
 
         public int RoadId => _roadId;
         public int StartBacteriumId => _startBacteriumId;

@@ -50,7 +50,7 @@
     <Compile Include="Enums\SignUpResultCode.cs" />
     <Compile Include="Enums\MessageCode.cs" />
     <Compile Include="BitConverters.cs" />
-    <Compile Include="Model\BacteriumBase.cs" />
+    <Compile Include="Model\BacteriumModel.cs" />
     <Compile Include="Model\BacteriumData.cs" />
     <Compile Include="Model\GameSettings.cs" />
     <Compile Include="Model\OwnClanBase.cs" />
@@ -62,15 +62,13 @@
     <Compile Include="Model\ClanBase.cs" />
     <Compile Include="Model\ConsumerProductType.cs" />
     <Compile Include="Model\Inventory.cs" />
-    <Compile Include="Model\Path.cs" />
     <Compile Include="Model\ProductPlace.cs" />
     <Compile Include="Model\Transform.cs" />
-    <Compile Include="Model\VirusBase.cs" />
     <Compile Include="Model\VirusGroupData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\Road.cs" />
+    <Compile Include="Tools\RoadCreator.cs" />
     <Compile Include="Tools\RoadManager.cs" />
-    <Compile Include="Tools\WayPosition.cs" />
     <Compile Include="Validation.cs" />
   </ItemGroup>
   <ItemGroup>

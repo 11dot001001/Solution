@@ -1,10 +1,10 @@
 ﻿using GameCore.Enums;
 using GameCore.Model;
 using GameCore.Tools;
+using ServerModel.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 
 namespace ServerModel.GameMechanics
 {
@@ -14,7 +14,6 @@ namespace ServerModel.GameMechanics
         private readonly Map _map;
         private readonly GameMode _gameMode;
         private readonly Dictionary<Client, Player> _players;
-        private readonly Random _random = new Random();
         private readonly List<VirusGroup> _virusGroups;
 
         public GameSession(IEnumerable<Client> clients, GameMode gameMode)
@@ -61,7 +60,7 @@ namespace ServerModel.GameMechanics
         }
         private void VirusGroupArrived(VirusGroup virusGroup)
         {
-            Bacterium bacterium = _map.Bacteriums[virusGroup.EndBacterium.Id];
+            BacteriumModel bacterium = _map.Bacteriums[virusGroup.EndBacterium.Id];
             bacterium.VirusCount += virusGroup.VirusCount;
             foreach (Player player in _players.Values)
                 Network.SendVirusGroupArrived(player.Client, bacterium.Id, bacterium.VirusCount);
@@ -87,27 +86,24 @@ namespace ServerModel.GameMechanics
                 _map.Bacteriums[i].VirusCount++;
         }
 
-        public void RequestSendViruses(Client client, IEnumerable<int> bacteriumsFrom, int bacteriumTo)
+        public void RequestSendViruses(Client client, IEnumerable<int> bacteriumsFrom, int bacteriumIdTo)
         {
             List<int> bacteriumsFromId = bacteriumsFrom.ToList();
-            bacteriumsFromId.Remove(bacteriumTo);
-            List<Bacterium> bacteriumFrom = new List<Bacterium>(bacteriumsFromId.Count);
+            bacteriumsFromId.Remove(bacteriumIdTo);
+            List<BacteriumModel> bacteriumFrom = new List<BacteriumModel>(bacteriumsFromId.Count);
             for (int i = 0; i < bacteriumsFromId.Count; i++)
                 bacteriumFrom.Add(_map.Bacteriums[bacteriumsFromId[i]]);
-
+            BacteriumModel bacteriumTo = _map.Bacteriums[bacteriumIdTo];
             //int removeCount = bacteriumFrom.RemoveAll(x => x.Owner != client);
             //if (removeCount != 0)
             //    MessageBox.Show("Some problem. " + client.IPAddress + ":" + client.Port);
 
             _players.TryGetValue(client, out Player player);
-            foreach (Bacterium bacterium in bacteriumFrom)
+            foreach (BacteriumModel bacterium in bacteriumFrom)
             {
-                Path path = bacterium.Roads.First(x => x.Key == bacteriumTo).Value;
-                int roadNumber = _random.Next(path.Roads.Count);
-                Road road = path.Roads[roadNumber];
                 bacterium.VirusCount /= 2;
                 VirusGroup virusGroup;
-                _virusGroups.Add(virusGroup = new VirusGroup(_virusSpeed, road, roadNumber, player, bacterium.VirusCount));
+                _virusGroups.Add(virusGroup = new VirusGroup(_virusSpeed, _map.RoadManager.GetRoad(bacterium, bacteriumTo), player, bacterium.VirusCount));
                 SendVirusGroup(virusGroup, bacterium.VirusCount);
             }
         }

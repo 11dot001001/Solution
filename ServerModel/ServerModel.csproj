@@ -53,16 +53,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameMechanics\Bacterium.cs" />
-    <Compile Include="GameMechanics\GameManager.cs" />
+    <Compile Include="Managers\GameManager.cs" />
     <Compile Include="GameMechanics\GameMode.cs" />
     <Compile Include="GameMechanics\GameSession.cs" />
     <Compile Include="GameMechanics\Map.cs" />
-    <Compile Include="GameMechanics\MapManager.cs" />
+    <Compile Include="Managers\MapManager.cs" />
     <Compile Include="GameMechanics\VirusGroup.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="GameMechanics\Settings.cs" />
-    <Compile Include="GameMechanics\Virus.cs" />
     <Compile Include="Network.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

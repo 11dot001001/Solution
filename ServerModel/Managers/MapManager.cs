@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ServerModel.GameMechanics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ServerModel.GameMechanics
+namespace ServerModel.Managers
 {
     public static class MapManager
     {
@@ -36,7 +37,7 @@ namespace ServerModel.GameMechanics
         {
             if (!_maps.TryGetValue(gameMode, out List<Map> maps))
                 throw new Exception();
-            return new Map(maps.First());
+            return (Map)maps.First().Clone();
         }
     }
 }

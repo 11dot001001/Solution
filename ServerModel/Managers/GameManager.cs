@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using GameCore.Model;
+using ServerModel.GameMechanics;
+using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 
-namespace ServerModel.GameMechanics
+namespace ServerModel.Managers
 {
     public class GameManager
     {
+        public GameSettings GetGameSettings(GameSession gameSession) => new GameSettings();
+
         private const float _virusGroupTimerInterval = 100f;
         private const float _bacteriumGrowthTimerInterval = 1000f;
         private readonly Timer _virusGroupTimer;

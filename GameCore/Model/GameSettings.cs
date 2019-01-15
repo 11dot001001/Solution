@@ -13,15 +13,13 @@ namespace GameCore.Model
         static GameSettings()
         {
             VariableLengthBitConverterBuilder<GameSettings> builder = new VariableLengthBitConverterBuilder<GameSettings>();
-            builder.AddField(x => x._bacteriums, (x, bacteriums) => x._bacteriums = bacteriums.ToArray(), ReliableBitConverter.GetInstance(IEnumerableVariableLengthBitConverter.GetInstance(BacteriumData.BitConverter.Instance)));
+            builder.AddField(x => x.Bacteriums, (x, bacteriums) => x.Bacteriums = bacteriums.ToArray(), ReliableBitConverter.GetInstance(IEnumerableVariableLengthBitConverter.GetInstance(BacteriumData.BitConverter.InitializeInstance)));
             BitConverter = builder.Finalize();
         }
 
-        public BacteriumData[] _bacteriums;
-
         public GameSettings() { }
-        public GameSettings(BacteriumData[] bacteriums) => _bacteriums = bacteriums ?? throw new ArgumentNullException(nameof(bacteriums));
+        public GameSettings(BacteriumData[] bacteriums) => Bacteriums = bacteriums ?? throw new ArgumentNullException(nameof(bacteriums));
 
-        public BacteriumData[] Bacteriums => _bacteriums;
+        public BacteriumData[] Bacteriums { get; private set; }
     }
 }
