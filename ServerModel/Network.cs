@@ -31,9 +31,10 @@ namespace ServerModel
             }
         }
         public static void StartGame(IEnumerable<Client> clients) => _server.TCPCall(_server.StartGame, clients);
-        public static void SendVirusGroup(Client client, VirusGroupData virusGroupData) => _server.TCPCall(_server.SendVirusGroup, virusGroupData, client);
+        public static void SendVirusGroup(Client client, VirusGroupData virusGroupData, int newVirusCount) => _server.TCPCall(_server.SendVirusGroup, virusGroupData, newVirusCount, client);
+        public static void SendVirusGroupArrived(Client client, int bacteriumId, int newVirusCount) => _server.TCPCall(_server.SendVirusGroupArrived, bacteriumId, newVirusCount, client);
         public static void Initialize(int port, string nameOrConnectionString) => _server = new Server(port, nameOrConnectionString, "");
         public static void Start() => _server.Start();
-        public static void Stop() => _server.Stop();
+        public static void Stop() => _server.Stop(); 
     }
 }

@@ -32,8 +32,9 @@ namespace ServerModel
         public RemoteProcedure<Account> ReceiveOtherAccount { get; set; }
         public RemoteProcedure<GameSettings> SendGameSettings { get; set; }
         public RemoteProcedure StartGame { get; set; }
-        public RemoteProcedure<VirusGroupData> SendVirusGroup { get; private set; }
-
+        public RemoteProcedure<VirusGroupData, int> SendVirusGroup { get; private set; }
+        public RemoteProcedure<int, int> SendVirusGroupArrived { get; private set; }
+        
         public List<Client> AuthorizedClients { get; set; } = new List<Client>();
 
         protected override void InitializeLocalProcedures()
@@ -63,7 +64,8 @@ namespace ServerModel
             ReceiveOtherAccount = DefineRemoteProcedure(otherAccountNullableConverter);
             SendGameSettings = DefineRemoteProcedure(ReliableBitConverter.GetInstance(GameSettings.BitConverter));
             StartGame = DefineRemoteProcedure();
-            SendVirusGroup = DefineRemoteProcedure(VirusGroupData.BitConverter.Instance);
+            SendVirusGroup = DefineRemoteProcedure(VirusGroupData.BitConverter.Instance, Int32BitConverter.Instance);
+            SendVirusGroupArrived = DefineRemoteProcedure(Int32BitConverter.Instance, Int32BitConverter.Instance);
         }
 
         #region Network

@@ -6,8 +6,10 @@ namespace ServerModel.GameMechanics
 {
     public class GameManager
     {
-        private const float _virusGroupTimerInterval = 100;
+        private const float _virusGroupTimerInterval = 100f;
+        private const float _bacteriumGrowthTimerInterval = 1000f;
         private readonly Timer _virusGroupTimer;
+        private readonly Timer _bacteriumGrowthTimer;
         private readonly List<GameSession> _gameSessions;
         private readonly Dictionary<int, Client> _findGameClients;
 
@@ -19,6 +21,10 @@ namespace ServerModel.GameMechanics
             _virusGroupTimer = new Timer(_virusGroupTimerInterval);
             _virusGroupTimer.Elapsed += _virusGroupTimer_Elapsed;
             _virusGroupTimer.Start();
+
+            _bacteriumGrowthTimer = new Timer(_bacteriumGrowthTimerInterval);
+            _bacteriumGrowthTimer.Elapsed += _bacteriumGrowthTimer_Elapsed; ;
+            _bacteriumGrowthTimer.Start();
         }
 
         private void TryToCreateGame()
@@ -32,6 +38,7 @@ namespace ServerModel.GameMechanics
             _gameSessions.Add(new GameSession(new Client[] { client1, client2 }, GameMode.OneByOne));
         }
         private void _virusGroupTimer_Elapsed(object sender, ElapsedEventArgs e) => _gameSessions.ForEach(x => x.UpdateVirusGroup());
+        private void _bacteriumGrowthTimer_Elapsed(object sender, ElapsedEventArgs e) => _gameSessions.ForEach(x => x.UpdateBacterium());
 
         public void ClientReadyToFindGame(Client client)
         {
