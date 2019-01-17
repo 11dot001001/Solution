@@ -1,5 +1,5 @@
 ﻿using GameCore.Model;
-using ILibrary.Maths.Geometry2D;
+using Devdeb.Maths.Geometry2D;
 using System;
 using System.Collections;
 using System.Collections.Generic;

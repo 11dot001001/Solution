@@ -72,9 +72,9 @@
     <Compile Include="Validation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Libraries\ILibrary\ILibrary\ILibrary.csproj">
+    <ProjectReference Include="..\..\..\..\..\Libraries\Devdeb\Devdeb\Devdeb.csproj">
       <Project>{f3ae47d4-3da5-4390-983a-4004c35b1b03}</Project>
-      <Name>ILibrary</Name>
+      <Name>Devdeb</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\..\Libraries\Noname\Noname\Noname.csproj">
       <Project>{95a5d098-a1b4-4951-9afe-eb2bc4ab230a}</Project>

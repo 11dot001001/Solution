@@ -1,4 +1,4 @@
-﻿using ILibrary.Maths.Geometry2D;
+﻿using Devdeb.Maths.Geometry2D;
 using Noname.BitConversion;
 using Noname.BitConversion.System;
 using UnityEngine;

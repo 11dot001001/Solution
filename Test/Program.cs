@@ -1,5 +1,5 @@
 ﻿using ServerModel.GameMechanics;
-using ILibrary.Maths.Geometry2D;
+using Devdeb.Maths.Geometry2D;
 using GameCore.Tools;
 
 namespace Test

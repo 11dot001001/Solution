@@ -1,7 +1,7 @@
 ﻿using GameCore.Enums;
 using GameCore.Model;
 using GameCore.Tools;
-using ILibrary.Maths.Geometry2D;
+using Devdeb.Maths.Geometry2D;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
