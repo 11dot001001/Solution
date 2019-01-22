@@ -23,7 +23,7 @@ namespace GameCore.Tools
                 List<Road> roads = new List<Road>();
                 for (int j = 0; j < bacteriums.Length; j++)
                     if (j != i)
-                        targetRoads.Add(bacteriums[j], new List<Road>(new RoadCreator(bacteriums[i], bacteriums[j], bacteriums).Roads));
+                        targetRoads.Add(bacteriums[j], new RoadCreator(bacteriums[i], bacteriums[j], bacteriums).Roads);
                 _roads.Add(bacteriums[i], targetRoads);
             }
         }
