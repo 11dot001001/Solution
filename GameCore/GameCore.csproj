@@ -67,8 +67,6 @@
     <Compile Include="Model\VirusGroupData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\BacteriumWayPoint.cs" />
-    <Compile Include="Tools\ExtremeWayPoint.cs" />
-    <Compile Include="Tools\IPosition.cs" />
     <Compile Include="Tools\Road.cs" />
     <Compile Include="Tools\RoadCreator.cs" />
     <Compile Include="Tools\RoadManager.cs" />

@@ -1,23 +1,19 @@
 ﻿using GameCore.Model;
-using Noname.BitConversion;
-using Noname.BitConversion.System.Collections.Generic;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace GameCore.Tools
 {
-    public class Road 
+    public class Road
     {
-        private List<IPosition> _points;
+        private List<BacteriumProximity> _bacteriumProximities;
         private float _length;
 
         public Road() { }
         public Road(BacteriumModel start, BacteriumModel end)
         {
-            _points = new List<IPosition>();
+            _bacteriumProximities = new List<BacteriumProximity>();
             DirectionFactor = 1f;
             _length = float.NaN;
             Start = start;
@@ -25,7 +21,7 @@ namespace GameCore.Tools
         }
         public Road(Road road)
         {
-            _points = new List<IPosition>(road.Points);
+            _bacteriumProximities = new List<BacteriumProximity>(road.BacteriumProximities);
             DirectionFactor = road.DirectionFactor;
             _length = float.NaN;
             Start = road.Start;
@@ -34,16 +30,27 @@ namespace GameCore.Tools
 
         public BacteriumModel Start { get; private set; }
         public BacteriumModel End { get; private set; }
-        public List<IPosition> Points => _points;
         public int Id { get; set; }
         public float DirectionFactor { get; set; }
+        public List<BacteriumProximity> BacteriumProximities => _bacteriumProximities;
         public float Length => !float.IsNaN(_length) ? _length : throw new Exception();
 
         public void SetLength()
         {
             _length = 0;
-            for (int i = 0; i < _points.Count-1; i++)
-                _length += Vector2.Distance(_points[i].Position, _points[i + 1].Position);
+            if (_bacteriumProximities.Count != 0)
+            {
+                _length += Vector2.Distance(Start.Transform.Position, _bacteriumProximities[0].StartPosition);
+                for (int i = 0; i < _bacteriumProximities.Count - 1; i++)
+                {
+                    _length += _bacteriumProximities[i].Distance;
+                    _length += Vector2.Distance(_bacteriumProximities[i].EndPosition, _bacteriumProximities[i + 1].StartPosition);
+                }
+                _length += _bacteriumProximities[_bacteriumProximities.Count - 1].Distance;
+                _length += Vector2.Distance(End.Transform.Position, _bacteriumProximities[_bacteriumProximities.Count - 1].EndPosition);
+            }
+            else
+                _length += Vector2.Distance(Start.Transform.Position, End.Transform.Position);
         }
     }
 }

@@ -41,7 +41,6 @@ namespace GameCore.Tools
             int id = 0;
             foreach (Road road in Roads)
             {
-                road.Points.Add(new ExtremeWayPoint(endPosition));
                 road.SetLength();
                 road.Id = id++;
             }
@@ -55,7 +54,6 @@ namespace GameCore.Tools
             _bacteriums.Remove(_globalStart);
             _bacteriums.Remove(_globalTarget);
             Road road = new Road(_globalStart, _globalTarget);
-            road.Points.Add(new ExtremeWayPoint(_globalStart.Transform.Position));
 
             List<BacteriumModel> tempTargets = _bacteriums.ToList();
 
@@ -114,11 +112,7 @@ namespace GameCore.Tools
             _bacteriums.Add(vertex.BindedBacterium);
 
             if (!isIntersect)
-            {
-                Geometry2D.Rotate(vertex.BindedBacterium.Transform.Circle, vertex.Direction, tangencyDirection, _rotateAngle, vertex.IsClockRotate, out List<Vector2> directions);
-
-                road.Points.AddRange(directions.Select(x=> (IPosition)new BacteriumWayPoint(vertex.BindedBacterium, x)));
-            }
+                road.BacteriumProximities.Add(new BacteriumProximity(vertex.BindedBacterium, vertex.Direction, tangencyDirection, vertex.IsClockRotate));
             else
                 GetRoads(vertex, nearest, road);
         }
@@ -167,8 +161,7 @@ namespace GameCore.Tools
             {
                 Road newRoad = new Road(road);
                 Roads.Add(newRoad);
-                Geometry2D.Rotate(vertex.BindedBacterium.Transform.Circle, vertex.Direction, internalDirectionStart, _rotateAngle, vertex.IsClockRotate, out List<Vector2> directions);
-                newRoad.Points.AddRange(directions.Select(x=> (IPosition)new BacteriumWayPoint(vertex.BindedBacterium, x)));
+                newRoad.BacteriumProximities.Add(new BacteriumProximity(vertex.BindedBacterium, vertex.Direction, internalDirectionStart, vertex.IsClockRotate));
                 GetRoads(new Vertex(IsClockRotation(vertex.BindedBacterium.Transform.Circle.Position + internalDirectionStart, target.Transform.Circle, internalDirectionEnd), target, internalDirectionEnd), newRoad);
             }
             else
@@ -177,8 +170,7 @@ namespace GameCore.Tools
             {
                 Road newRoad = new Road(road);
                 Roads.Add(newRoad);
-                Geometry2D.Rotate(vertex.BindedBacterium.Transform.Circle, vertex.Direction, externalDirectionStart, _rotateAngle, vertex.IsClockRotate, out List<Vector2> directions);
-                newRoad.Points.AddRange(directions.Select(x=> (IPosition)new BacteriumWayPoint(vertex.BindedBacterium, x)));
+                newRoad.BacteriumProximities.Add(new BacteriumProximity(vertex.BindedBacterium, vertex.Direction, externalDirectionStart, vertex.IsClockRotate));
                 GetRoads(new Vertex(IsClockRotation(vertex.BindedBacterium.Transform.Circle.Position + externalDirectionStart, target.Transform.Circle, externalDirectionEnd), target, externalDirectionEnd), newRoad);
             }
             else if(nearest != nearest2)
