@@ -37,10 +37,9 @@ namespace GameCore.Tools
 
         public void SetLength()
         {
-            _length = 0;
             if (_bacteriumProximities.Count != 0)
             {
-                _length += Vector2.Distance(Start.Transform.Position, _bacteriumProximities[0].StartPosition);
+                _length = Vector2.Distance(Start.Transform.Position, _bacteriumProximities[0].StartPosition);
                 for (int i = 0; i < _bacteriumProximities.Count - 1; i++)
                 {
                     _length += _bacteriumProximities[i].Distance;
@@ -50,7 +49,7 @@ namespace GameCore.Tools
                 _length += Vector2.Distance(End.Transform.Position, _bacteriumProximities[_bacteriumProximities.Count - 1].EndPosition);
             }
             else
-                _length += Vector2.Distance(Start.Transform.Position, End.Transform.Position);
+                _length = Vector2.Distance(Start.Transform.Position, End.Transform.Position);
         }
     }
 }
