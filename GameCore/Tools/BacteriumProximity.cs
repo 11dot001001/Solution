@@ -10,18 +10,18 @@ namespace GameCore.Tools
         public BacteriumModel BindedBacterium;
         public Vector2 StartDirection;
         public Vector2 EndDirection;
-        public bool IsClockRotate;
+        public bool ClockWise;
 
         public BacteriumProximity(BacteriumModel bindedBacterium, Vector2 startDirection, Vector2 endDirection, bool isClockRotate)
         {
             BindedBacterium = bindedBacterium ?? throw new ArgumentNullException(nameof(bindedBacterium));
             StartDirection = startDirection;
             EndDirection = endDirection;
-            IsClockRotate = isClockRotate;
+            ClockWise = isClockRotate;
         }
 
         public Vector2 StartPosition => BindedBacterium.Transform.Position + StartDirection;
         public Vector2 EndPosition => BindedBacterium.Transform.Position + EndDirection;
-        public float Distance => (float)Math.PI * BindedBacterium.Transform.BacteriumRadius * Geometry2D.Angle(StartDirection, EndDirection, IsClockRotate) / 180;
+        public float Distance => (float)Math.PI * BindedBacterium.Transform.BacteriumRadius * Geometry2D.Angle(StartDirection, EndDirection, ClockWise) / 180;
     }
 }

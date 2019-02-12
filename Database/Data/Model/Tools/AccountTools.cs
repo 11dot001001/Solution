@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Mail;
-using System.Text.RegularExpressions;
+﻿using GameCore;
+using System;
 using System.Security.Cryptography;
-using GameCore;
+using System.Text;
 
 namespace Database.Data.Model.Tools
 {
@@ -44,10 +39,7 @@ namespace Database.Data.Model.Tools
             return bytes;
         }
 
-        public static byte[] GetDataPassword(string password)
-        {
-            return GetPasswordData(password);
-        }
+        public static byte[] GetDataPassword(string password) => _ = GetPasswordData(password);
 
         public static bool IsPasswordVerification(Account account, string password)
         {
@@ -64,9 +56,6 @@ namespace Database.Data.Model.Tools
             return true;
         }
 
-        public static int GetPasswordLength()
-        {
-            return passwordSaltLength + passwordHashLength;
-        }
+        public static int GetPasswordLength() => passwordSaltLength + passwordHashLength;
     }
 }
